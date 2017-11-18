@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">SuggestDemo</string>
+
+    <string-array name="food">
+        <item>Oswald: 121 Soquel Ave.</item>
+        <item>Lillian's Italian Restaurant: 1148 Soquel Ave</item>
+        <item>Riva Fish House: 31 Municipal Wharf</item>
+        <item>Pizza My Heart: 1116 Pacific Ave.</item>
+    </string-array>
+
+    <string-array name="entertainment">
+        <item>The Mystery Spot: 465 Mystery Spot Rd.</item>
+        <item>Santa Cruz Wharf: 21 Municipal Wharf</item>
+        <item>Natural Bridges State Beach: 2531 W Cliff Dr</item>
+        <item>Wilder Ranch State Park: 1401 Coast Rd.</item>
+    </string-array>
+
+    <string-array name="fun">
+        <item>UC SC Arboretum: 432 Mission Ave.</item>
+        <item>Santa Cruz Beach Boardwalk: 400 Beach St</item>
+        <item>Lighthouse Field State Beach: 99 Bullshit Ave.</item>
+        <item>Neptune's Kingdom: 400 Beach St.</item>
+    </string-array>
+
+    <string-array name="moreFood">
+        <item>Natural Bridges State Beach: 2531 W Cliff Dr</item>
+        <item>Santa Cruz Beach Boardwalk: 400 Beach St</item>
+        <item>Lighthouse Field State Beach: 99 Bullshit Ave.</item>
+        <item>Pizza My Heart: 1116 Pacific Ave.</item>
+    </string-array>
+
+
+</resources>
