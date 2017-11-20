@@ -22,6 +22,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ImageView mGoogleMyLocation;
     private ImageView mGoogleInfo;
     private ImageView mGooglePlacesIcon;
+    private Button placesButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +102,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mGoogleMyLocation = (ImageView) findViewById(R.id.myLocationGPSIcon);
         mGoogleInfo = (ImageView) findViewById(R.id.myInfomrationIcon);
         mGooglePlacesIcon = (ImageView) findViewById(R.id.myPlacesIcon);
+
+        placesButton = (Button) findViewById(R.id.placesButton);
 
         getLocationPermissions();
         if (isServicesOk()) {
@@ -276,12 +280,30 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
 
-
                 // Google Places API (Directly from there) Pick Places
 
                 PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
                 try {
                     startActivityForResult(builder.build(MainActivity.this), PLACE_PICKER_REQUEST);
+                    mGoogleMaps.clear();
+                } catch (GooglePlayServicesRepairableException e) {
+                    Log.e("Places", "GooglePlayServicesRepairableException: " + e.getMessage() );
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    Log.e("Places", "GooglePlayServicesNotAvailableException: " + e.getMessage() );
+                }
+            }
+        });
+
+        placesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                // Google Places API (Directly from there) Pick Places
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                try {
+                    Intent intent = builder.build(MainActivity.this);
+                    startActivityForResult(intent, PLACE_PICKER_REQUEST);
+                    mGoogleMaps.clear();
                 } catch (GooglePlayServicesRepairableException e) {
                     Log.e("Places", "GooglePlayServicesRepairableException: " + e.getMessage() );
                 } catch (GooglePlayServicesNotAvailableException e) {
@@ -345,7 +367,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void onComplete(@NonNull com.google.android.gms.tasks.Task<Location> task) {
                         if(task.isSuccessful()){
                             Log.d("Maps", "Location Found");
-                            Location currentLocation = (Location) task.getResult();
+                            Location currentLocation = task.getResult();
 
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), defaultZoom, "My Location");
                         } else {
