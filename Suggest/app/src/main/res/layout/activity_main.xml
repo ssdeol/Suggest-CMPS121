@@ -6,13 +6,86 @@
     android:layout_height="match_parent"
     tools:context="com.example.ssdeol.suggest.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/mapsFragment"
+            tools:context=".MainActivity"
+            android:name="com.google.android.gms.maps.SupportMapFragment" />
+        
+        <RelativeLayout
+            android:id="@+id/mapRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:elevation="10dp"
+            android:background="@drawable/white_border">
+
+            <ImageView
+                android:id="@+id/searchIcon"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/ic_magnify" />
+
+            <AutoCompleteTextView
+                android:id="@+id/searchInput"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@id/searchIcon"
+                android:layout_centerVertical="true"
+                android:textSize="15dp"
+                android:textColor="#000"
+                android:background="@null"
+                android:hint="Enter a place to search"
+                android:imeOptions="actionSearch"/>
+
+        </RelativeLayout>
+        
+        <ImageView
+            android:id="@+id/myLocationGPSIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/mapRelativeLayout"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_gps" />
+
+        <ImageView
+            android:id="@+id/myPlacesIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/mapRelativeLayout"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_map" />
+
+        <ImageView
+            android:id="@+id/myInfomrationIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/myPlacesIcon"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_info" />
+
+
+
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
