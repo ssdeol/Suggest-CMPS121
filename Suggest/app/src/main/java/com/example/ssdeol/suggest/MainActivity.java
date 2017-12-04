@@ -1,13 +1,17 @@
 package com.example.ssdeol.suggest;
 
+
 import android.Manifest;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -22,6 +26,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,6 +37,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -60,10 +66,15 @@ import java.util.List;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener {
-
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
+        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+    private static final String GOOGLE_API_KEY ="AIzaSyDNLVmTGAh02vMk31QMxkOA7SS0TvPbteY";
     GoogleMap mGoogleMaps;
     FusedLocationProviderClient mFusedLocationProviderClient;
+
+    double latitude = 0;
+    double longitude = 0;
+    private int PROXIMITY_RADIUS = 5000;
 
     private static final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = android.Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -90,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ImageView mGoogleMyLocation;
     private ImageView mGoogleInfo;
     private ImageView mGooglePlacesIcon;
+    private Button placesButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,11 +113,55 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mGoogleInfo = (ImageView) findViewById(R.id.myInfomrationIcon);
         mGooglePlacesIcon = (ImageView) findViewById(R.id.myPlacesIcon);
 
+        placesButton = (Button) findViewById(R.id.placesButton);
+
+        if (!isGooglePlayServicesAvailable()) {
+            finish();
+        }
+
         getLocationPermissions();
         if (isServicesOk()) {
             Log.d("Services", "Service is Ok.");
         }
     }
+
+    @Override
+    public void onLocationChanged(Location location)
+    {
+        latitude = location.getLatitude();
+
+        longitude = location.getLongitude();
+        LatLng latLng = new LatLng(latitude, longitude);
+        mGoogleMaps.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mGoogleMaps.animateCamera(CameraUpdateFactory.zoomTo(12));
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    private boolean isGooglePlayServicesAvailable() {
+        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (ConnectionResult.SUCCESS == status) {
+            return true;
+        } else {
+            GooglePlayServicesUtil.getErrorDialog(status, this, 0).show();
+            return false;
+        }
+    }
+
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -210,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void searchForTerm(){
+    private void searchForTerm() {
         Log.d("Services", "Init function: Initializing.");
 
 
@@ -233,10 +289,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mGoogleSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if(actionId == EditorInfo.IME_ACTION_SEARCH
+                if (actionId == EditorInfo.IME_ACTION_SEARCH
                         || actionId == EditorInfo.IME_ACTION_DONE
                         || keyEvent.getAction() == KeyEvent.ACTION_DOWN
-                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER){
+                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
 
                     //execute our method for searching
                     geoLocate();
@@ -259,14 +315,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 Log.d("Maps", "My Info Icon clicked, getting Information.");
 
-                try{
-                   if(mGoogleMarker.isInfoWindowShown()){
-                       mGoogleMarker.hideInfoWindow();
-                   } else {
-                       Log.d("Maps", mGooglePlace.toString());
-                       mGoogleMarker.showInfoWindow();
-                   }
-                }catch (NullPointerException e){
+                try {
+                    if (mGoogleMarker.isInfoWindowShown()) {
+                        mGoogleMarker.hideInfoWindow();
+                    } else {
+                        Log.d("Maps", mGooglePlace.toString());
+                        mGoogleMarker.showInfoWindow();
+                    }
+                } catch (NullPointerException e) {
                     Log.d("Maps", "Infomratino was null.");
                 }
             }
@@ -276,21 +332,74 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
 
-
                 // Google Places API (Directly from there) Pick Places
 
                 PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
                 try {
                     startActivityForResult(builder.build(MainActivity.this), PLACE_PICKER_REQUEST);
+                    mGoogleMaps.clear();
+                } catch (GooglePlayServicesRepairableException e) {
+                    Log.e("Places", "GooglePlayServicesRepairableException: " + e.getMessage());
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    Log.e("Places", "GooglePlayServicesNotAvailableException: " + e.getMessage());
+                }
+            }
+        });
+
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        String bestProvider = locationManager.getBestProvider(criteria, true);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location location = locationManager.getLastKnownLocation(bestProvider);
+        if (location != null) {
+            onLocationChanged(location);
+        }
+        locationManager.requestLocationUpdates(bestProvider, 20000, 0, this);
+
+        placesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String type = mGoogleSearchText.getText().toString();
+                StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+                googlePlacesUrl.append("location=" + latitude + "," + longitude);
+                googlePlacesUrl.append("&radius=" + PROXIMITY_RADIUS);
+                googlePlacesUrl.append("&types=" + type);
+                googlePlacesUrl.append("&sensor=true");
+                googlePlacesUrl.append("&key=" + GOOGLE_API_KEY);
+
+                GooglePlacesReadTask googlePlacesReadTask = new GooglePlacesReadTask();
+                Object[] toPass = new Object[2];
+                toPass[0] = mGoogleMaps;
+                toPass[1] = googlePlacesUrl.toString();
+                googlePlacesReadTask.execute(toPass);
+                /* // Google Places API (Directly from there) Pick Places
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                try {
+                    Intent intent = builder.build(MainActivity.this);
+                    startActivityForResult(intent, PLACE_PICKER_REQUEST);
+                    mGoogleMaps.clear();
                 } catch (GooglePlayServicesRepairableException e) {
                     Log.e("Places", "GooglePlayServicesRepairableException: " + e.getMessage() );
                 } catch (GooglePlayServicesNotAvailableException e) {
                     Log.e("Places", "GooglePlayServicesNotAvailableException: " + e.getMessage() );
                 }
+            }*/
             }
-        });
 
-        hideKeyboard();
+            //hideKeyboard();
+        });
     }
 
     // Google Places API (Directly from there) Pick Places
@@ -345,7 +454,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void onComplete(@NonNull com.google.android.gms.tasks.Task<Location> task) {
                         if(task.isSuccessful()){
                             Log.d("Maps", "Location Found");
-                            Location currentLocation = (Location) task.getResult();
+                            Location currentLocation = task.getResult();
 
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), defaultZoom, "My Location");
                         } else {
@@ -448,7 +557,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mGooglePlace = new PlaceInfo();
                 mGooglePlace.setName(place.getName().toString());
                 mGooglePlace.setAddress(place.getAddress().toString());
- //               mGooglePlace.setAttributions(place.getAttributions().toString());
+                //               mGooglePlace.setAttributions(place.getAttributions().toString());
                 mGooglePlace.setPhoneNumber(place.getPhoneNumber().toString());
                 mGooglePlace.setLatLng(place.getLatLng());
                 mGooglePlace.setId(place.getId());
