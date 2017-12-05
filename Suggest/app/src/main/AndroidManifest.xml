@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="com.javapapers.android.googleplacesdetail.permission.MAPS_RECEIVE" />
 
     <application
         android:allowBackup="true"
@@ -29,6 +31,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDNLVmTGAh02vMk31QMxkOA7SS0TvPbteY" />
 
+        <activity android:name=".MyListActivity" />
+        <activity android:name=".AboutUsActivity" />
+        <activity android:name=".MapActivity"></activity>
     </application>
 
 </manifest>

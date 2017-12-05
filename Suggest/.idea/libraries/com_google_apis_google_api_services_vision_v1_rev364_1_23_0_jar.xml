@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="com.google.apis:google-api-services-vision:v1-rev364-1.23.0@jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.apis/google-api-services-vision/v1-rev364-1.23.0/e031336f3c82b09fe5ca6a632da96ca9f78c7264/google-api-services-vision-v1-rev364-1.23.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.apis/google-api-services-vision/v1-rev364-1.23.0/f60f9ec818b65217b96417077a64390b06fd1267/google-api-services-vision-v1-rev364-1.23.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
