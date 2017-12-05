@@ -145,6 +145,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void homeButtonPressed(View view) {
+        Intent intent = new Intent(MainActivity.this, MapActivity.class);
+        startActivity(intent);
+    }
+
+    public void placeButtonPressed(View view) {
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+        try {
+            Intent intent = builder.build(MainActivity.this);
+            startActivityForResult(intent, PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesRepairableException e) {
+            Log.e("Places", "GooglePlayServicesRepairableException: " + e.getMessage());
+        } catch (GooglePlayServicesNotAvailableException e) {
+            Log.e("Places", "GooglePlayServicesNotAvailableException: " + e.getMessage());
+        }
+    }
+
+    public void listButtonPressed(View view) {
+        Intent intent = new Intent(MainActivity.this, MyListActivity.class);
+        startActivity(intent);
+    }
+
+    public void aboutUsButtonPressed(View view) {
+        Intent intent = new Intent(MainActivity.this, AboutUsActivity.class);
+        startActivity(intent);
+    }
+
+    public void whyNotButtonPressed(View view) {
+        Intent intent = new Intent(MainActivity.this, YouAreDoneActivity.class);
+        startActivity(intent);
     }
 
     /*

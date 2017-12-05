@@ -21,9 +21,59 @@
         <ImageButton
             android:layout_width="match_parent"
             android:layout_height="300dp"
+            android:layout_weight="2"
             android:id="@+id/homeButton"
             android:onClick="homeButtonPressed"
-            android:src="@drawable/ic_map"
+            android:src="@drawable/home_maps"
+            />
+
+        <ImageButton
+            android:layout_width="200dp"
+            android:layout_height="150dp"
+            android:foregroundGravity="left"
+            android:layout_weight="1"
+            android:layout_below="@id/homeButton"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/listButton"
+            android:id="@+id/placeButton"
+            android:onClick="placeButtonPressed"
+            android:src="@drawable/places"
+            />
+
+        <ImageButton
+            android:layout_width="200dp"
+            android:layout_height="150dp"
+            android:foregroundGravity="right"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:layout_below="@id/homeButton"
+            android:id="@+id/listButton"
+            android:onClick="listButtonPressed"
+            android:src="@drawable/list_places"
+            />
+
+        <ImageButton
+            android:layout_width="200dp"
+            android:layout_height="150dp"
+            android:id="@+id/aboutUsButton"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:layout_below="@id/placeButton"
+            android:layout_toRightOf="@id/whyNotButton"
+            android:onClick="aboutUsButtonPressed"
+            android:src="@drawable/about_us"
+            />
+
+        <ImageButton
+            android:layout_width="200dp"
+            android:layout_height="150dp"
+            android:id="@+id/whyNotButton"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:layout_below="@id/listButton"
+            android:onClick="whyNotButtonPressed"
+            android:src="@drawable/fun"
             />
 
     </RelativeLayout>
