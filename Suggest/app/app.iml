@@ -114,6 +114,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="com.google.android.gms:play-services-vision-common-11.6.0" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-gcm-license-11.6.0" level="project" />
+    <orderEntry type="library" name="com.android.support:recyclerview-v7-26.1.0" level="project" />
     <orderEntry type="library" name="com.google.firebase:firebase-crash-11.6.0" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-wearable-license-11.6.0" level="project" />
     <orderEntry type="library" scope="TEST" name="com.squareup:javawriter:2.1.1@jar" level="project" />
@@ -142,6 +143,7 @@
     <orderEntry type="library" name="com.google.android.gms:play-services-identity-license-11.6.0" level="project" />
     <orderEntry type="library" name="com.android.support:palette-v7-25.2.0" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-base-11.6.0" level="project" />
+    <orderEntry type="library" name="com.android.support:design-26.1.0" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-panorama-license-11.6.0" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-places-11.6.0" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-tasks-license-11.6.0" level="project" />
@@ -212,6 +214,7 @@
     <orderEntry type="library" name="com.google.android.gms:play-services-ads-lite-11.6.0" level="project" />
     <orderEntry type="library" name="com.google.firebase:firebase-auth-11.6.0" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-plus-license-11.6.0" level="project" />
+    <orderEntry type="library" name="com.android.support:transition-26.1.0" level="project" />
     <orderEntry type="library" name="com.google.firebase:firebase-analytics-impl-11.6.0" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-auth-api-phone-license-11.6.0" level="project" />
     <orderEntry type="library" name="com.google.firebase:firebase-iid-license-11.6.0" level="project" />

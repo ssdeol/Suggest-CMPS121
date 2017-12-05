@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Suggest</string>
+    <string name="btn_to_find">Find</string>
+    <string name="btn_photo">Photo</string>
+    <string name="Phot">Camera</string>
+
+    <string name ="btn_materialD1">cam</string>
+    <string name="btn_materialD">Find</string>
 </resources>

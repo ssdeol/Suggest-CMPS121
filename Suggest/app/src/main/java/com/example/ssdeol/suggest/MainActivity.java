@@ -2,6 +2,7 @@ package com.example.ssdeol.suggest;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -20,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -61,6 +64,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,13 +72,12 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
-    private static final String GOOGLE_API_KEY ="AIzaSyDNLVmTGAh02vMk31QMxkOA7SS0TvPbteY";
     GoogleMap mGoogleMaps;
     FusedLocationProviderClient mFusedLocationProviderClient;
 
     double latitude = 0;
     double longitude = 0;
-    private int PROXIMITY_RADIUS = 5000;
+    private int PROXIMITY_RADIUS = 2000;
 
     private static final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = android.Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -102,10 +105,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ImageView mGoogleInfo;
     private ImageView mGooglePlacesIcon;
     private Button placesButton;
+    private Button takePhoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         mGoogleSearchText = (AutoCompleteTextView) findViewById(R.id.searchInput);
@@ -113,16 +118,38 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mGoogleInfo = (ImageView) findViewById(R.id.myInfomrationIcon);
         mGooglePlacesIcon = (ImageView) findViewById(R.id.myPlacesIcon);
 
-        placesButton = (Button) findViewById(R.id.placesButton);
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.idBottomNav);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                Intent next_activity = null;
+                switch (menuItem.getItemId()) {
+                    case R.id.materialFind:
+                        //transition to manual entry activity
+                        next_activity = new Intent(MainActivity.this, SearchPlaces.class);
+                        startActivity(next_activity);
+                        break;
 
-        if (!isGooglePlayServicesAvailable()) {
-            finish();
-        }
+                    case R.id.materialCam:
+                        //transition to recent purchases activity
+                        Intent intent = new Intent(MainActivity.this, PhotoView.class);
+                        startActivity(intent);
+                        break;
+
+
+                }
+                return true;
+            }
+        });
+
 
         getLocationPermissions();
         if (isServicesOk()) {
             Log.d("Services", "Service is Ok.");
+
+
         }
+
     }
 
     @Override
@@ -239,10 +266,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    @SuppressLint("MissingPermission")
     private void prepareMap() {
         Toast.makeText(this, "Map is Ready", Toast.LENGTH_LONG).show();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapsFragment);
-
         mapFragment.getMapAsync(MainActivity.this);
 
     }
@@ -346,60 +373,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        String bestProvider = locationManager.getBestProvider(criteria, true);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        Location location = locationManager.getLastKnownLocation(bestProvider);
-        if (location != null) {
-            onLocationChanged(location);
-        }
-        locationManager.requestLocationUpdates(bestProvider, 20000, 0, this);
 
-        placesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                String type = mGoogleSearchText.getText().toString();
-                StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-                googlePlacesUrl.append("location=" + latitude + "," + longitude);
-                googlePlacesUrl.append("&radius=" + PROXIMITY_RADIUS);
-                googlePlacesUrl.append("&types=" + type);
-                googlePlacesUrl.append("&sensor=true");
-                googlePlacesUrl.append("&key=" + GOOGLE_API_KEY);
-
-                GooglePlacesReadTask googlePlacesReadTask = new GooglePlacesReadTask();
-                Object[] toPass = new Object[2];
-                toPass[0] = mGoogleMaps;
-                toPass[1] = googlePlacesUrl.toString();
-                googlePlacesReadTask.execute(toPass);
-                /* // Google Places API (Directly from there) Pick Places
-                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-                try {
-                    Intent intent = builder.build(MainActivity.this);
-                    startActivityForResult(intent, PLACE_PICKER_REQUEST);
-                    mGoogleMaps.clear();
-                } catch (GooglePlayServicesRepairableException e) {
-                    Log.e("Places", "GooglePlayServicesRepairableException: " + e.getMessage() );
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    Log.e("Places", "GooglePlayServicesNotAvailableException: " + e.getMessage() );
-                }
-            }*/
-            }
-
-            //hideKeyboard();
-        });
     }
 
     // Google Places API (Directly from there) Pick Places
