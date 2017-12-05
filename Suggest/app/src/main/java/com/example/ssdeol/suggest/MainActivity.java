@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                     myDrawerLayout.closeDrawers();
                 } else if (nav[4] == (String) parent.getItemAtPosition(position)) {
                     // Go to About us Activity
-                    Intent intent = new Intent(MainActivity.this, AboutUsActivity.class);
+                    Intent intent = new Intent(MainActivity.this, YouAreDoneActivity.class);
                     startActivity(intent);
                     myDrawerLayout.closeDrawers();
                 }
