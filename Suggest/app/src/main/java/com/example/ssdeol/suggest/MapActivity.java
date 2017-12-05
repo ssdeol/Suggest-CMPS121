@@ -32,6 +32,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -78,7 +79,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     GoogleMap mGoogleMaps;
     FusedLocationProviderClient mFusedLocationProviderClient;
-    List<Address> listAddresses;
+
 
     private static final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = android.Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -94,7 +95,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private PlaceInfo mGooglePlace;
     private Marker mGoogleMarker;
     double latitude, longitude;
+    LatLng latLngList;
     String place;
+    String placeName;
+    String address = "";
     int NEARBY_RADIUS = 10000;
 
     // We need 2 coordinates as Bounds that basically encompasses the entire world.
@@ -268,11 +272,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
 
-        String address = "";
+        latLngList = latLng;
 
         try {
 
-             listAddresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+            List<Address> listAddresses = geocoder.getFromLocation(latLngList.latitude, latLngList.longitude, 1);
 
             if (listAddresses != null && listAddresses.size() > 0) {
 
@@ -294,23 +298,51 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             e.printStackTrace();
         }
 
-        if (address == "") {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setTitle("Name: ");
+        alertDialog.setMessage("Enter Name of the place");
 
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm yyyy-MM-dd");
+        final EditText input = new EditText(MapActivity.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        alertDialog.setView(input);
+        alertDialog.setIcon(R.drawable.key);
 
-            address = sdf.format(new Date());
+        alertDialog.setPositiveButton("Add Place",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        placeName = input.getText().toString();
+                        if (address.equals("")) {
 
-        }
+//            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm yyyy-MM-dd");
+//
+                            address = placeName;
+//
+                        }
 
-        mGoogleMaps.addMarker(new MarkerOptions().position(latLng).title(address));
+                        mGoogleMaps.addMarker(new MarkerOptions().position(latLngList).title(address));
 
-        MyListActivity.places.add(address);
-        MyListActivity.locations.add(latLng);
+                        MyListActivity.places.add(address);
+                        MyListActivity.locations.add(latLngList);
+                    }
+                }
+        );
+
+        alertDialog.setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                }
+        );
+
+        alertDialog.show();
 
     //    MyListActivity.arrayAdapter.notifyDataSetChanged();
 
         Toast.makeText(this, "Location Saved", Toast.LENGTH_SHORT).show();
-
     }
 
 

@@ -49,5 +49,6 @@ public class MyListActivity extends AppCompatActivity {
 
         });
 
+        // Just create a update functino // leave places.add in there and put everything else here
     }
 }
