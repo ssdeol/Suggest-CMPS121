@@ -18,6 +18,14 @@
         tools:context=".MainActivity"
         >
 
+        <ImageButton
+            android:layout_width="500dp"
+            android:layout_height="500dp"
+            android:id="@+id/homeButton"
+            android:onClick="homeButtonPressed"
+            android:src="@drawable/ic_map"
+            />
+
     </RelativeLayout>
 
     <FrameLayout

@@ -10,6 +10,7 @@ import android.content.res.Configuration;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -64,15 +65,20 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.util.Log.i;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMapLongClickListener {
 
     GoogleMap mGoogleMaps;
     FusedLocationProviderClient mFusedLocationProviderClient;
+    List<Address> listAddresses;
 
     private static final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = android.Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -117,6 +123,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         placesButton = (Button) findViewById(R.id.placesButton);
 
         String url = getUrl(latitude, longitude, place);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.mapsFragment);
+        mapFragment.getMapAsync(this);
 
         getLocationPermissions();
         if (isServicesOk()) {
@@ -216,9 +226,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void prepareMap() {
         Toast.makeText(this, "Map is Ready", Toast.LENGTH_LONG).show();
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapsFragment);
-
-        mapFragment.getMapAsync(MapActivity.this);
+//        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapsFragment);
+//
+//        mapFragment.getMapAsync(MapActivity.this);
 
     }
 
@@ -226,120 +236,190 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMaps = googleMap;
 
-        if (mLocationPermissionsGranted) {
-            getDeviceLocation();
+        mGoogleMaps.setOnMapLongClickListener(this);
 
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
+        Intent intent = getIntent();
+
+        if (intent.getIntExtra("placeNumber", 0) == 0) {
+            if (mLocationPermissionsGranted) {
+                getDeviceLocation();
+
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                mGoogleMaps.setMyLocationEnabled(true);
+                mGoogleMaps.getUiSettings().setMyLocationButtonEnabled(false);
+                searchForTerm();
+                hideKeyboard();
             }
-            mGoogleMaps.setMyLocationEnabled(true);
-            mGoogleMaps.getUiSettings().setMyLocationButtonEnabled(false);
-            searchForTerm();
-            hideKeyboard();
+        } else {
+            Location placeLocation = new Location(LocationManager.GPS_PROVIDER);
+            placeLocation.setLatitude(MyListActivity.locations.get(intent.getIntExtra("placeNumber", 0)).latitude);
+            placeLocation.setLongitude(MyListActivity.locations.get(intent.getIntExtra("placeNumber", 0)).longitude);
+
+            moveCamera(new LatLng(placeLocation.getLatitude(), placeLocation.getLongitude()), defaultZoom, "Your Place");
         }
     }
+
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+
+        Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+
+        String address = "";
+
+        try {
+
+             listAddresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+
+            if (listAddresses != null && listAddresses.size() > 0) {
+
+                if (listAddresses.get(0).getThoroughfare() != null) {
+
+                    if (listAddresses.get(0).getSubThoroughfare() != null) {
+
+                        address += listAddresses.get(0).getSubThoroughfare() + " ";
+
+                    }
+
+                    address += listAddresses.get(0).getThoroughfare();
+
+                }
+
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (address == "") {
+
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm yyyy-MM-dd");
+
+            address = sdf.format(new Date());
+
+        }
+
+        mGoogleMaps.addMarker(new MarkerOptions().position(latLng).title(address));
+
+        MyListActivity.places.add(address);
+        MyListActivity.locations.add(latLng);
+
+    //    MyListActivity.arrayAdapter.notifyDataSetChanged();
+
+        Toast.makeText(this, "Location Saved", Toast.LENGTH_SHORT).show();
+
+    }
+
+
 
     private void searchForTerm(){
         Log.d("Services", "Init function: Initializing.");
 
 
         // Google Places API (Directly from google documentation)
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(this)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(this, this)
-                .build();
-
-        mGoogleSearchText.setOnItemClickListener(mAutocompleteClickListener);
-
-        // An instance of the class taken from google github page (AutoCompleteList)
-        mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient,
-                LAT_LNG_BOUNDS, null);
-
-        mGoogleSearchText.setAdapter(mPlaceAutocompleteAdapter);
-
-        mGoogleSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if(actionId == EditorInfo.IME_ACTION_SEARCH
-                        || actionId == EditorInfo.IME_ACTION_DONE
-                        || keyEvent.getAction() == KeyEvent.ACTION_DOWN
-                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER){
-
-                    //execute our method for searching
-                    geoLocate();
-                }
-
-                return false;
+        if(mGoogleApiClient == null || !mGoogleApiClient.isConnected()) {
+            try {
+                mGoogleApiClient = new GoogleApiClient
+                        .Builder(this)
+                        .addApi(Places.GEO_DATA_API)
+                        .addApi(Places.PLACE_DETECTION_API)
+                        .enableAutoManage(this, this)
+                        .build();
+            } catch (Exception e) {
+                Log.e("Maps", "Already working with one client");
             }
-        });
 
-        mGoogleMyLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("Maps", "My Location Icon clicked, getting device location.");
-                getDeviceLocation();
-            }
-        });
+            mGoogleSearchText.setOnItemClickListener(mAutocompleteClickListener);
 
-        mGoogleInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("Maps", "My Info Icon clicked, getting Information.");
+            // An instance of the class taken from google github page (AutoCompleteList)
+            mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient,
+                    LAT_LNG_BOUNDS, null);
 
-                try{
-                    if(mGoogleMarker.isInfoWindowShown()){
-                        mGoogleMarker.hideInfoWindow();
-                    } else {
-                        Log.d("Maps", mGooglePlace.toString());
-                        mGoogleMarker.showInfoWindow();
+            mGoogleSearchText.setAdapter(mPlaceAutocompleteAdapter);
+
+            mGoogleSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                    if (actionId == EditorInfo.IME_ACTION_SEARCH
+                            || actionId == EditorInfo.IME_ACTION_DONE
+                            || keyEvent.getAction() == KeyEvent.ACTION_DOWN
+                            || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
+
+                        //execute our method for searching
+                        geoLocate();
                     }
-                }catch (NullPointerException e){
-                    Log.d("Maps", "Infomratino was null.");
+
+                    return false;
                 }
-            }
-        });
+            });
 
-        mGooglePlacesIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                // Google Places API (Directly from there) Pick Places
-
-                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-                try {
-                    startActivityForResult(builder.build(MapActivity.this), PLACE_PICKER_REQUEST);
-                    mGoogleMaps.clear();
-                } catch (GooglePlayServicesRepairableException e) {
-                    Log.e("Places", "GooglePlayServicesRepairableException: " + e.getMessage() );
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    Log.e("Places", "GooglePlayServicesNotAvailableException: " + e.getMessage() );
+            mGoogleMyLocation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("Maps", "My Location Icon clicked, getting device location.");
+                    getDeviceLocation();
                 }
-            }
-        });
+            });
 
-        placesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            mGoogleInfo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("Maps", "My Info Icon clicked, getting Information.");
 
-                // Google Places API (Directly from there) Pick Places
-                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-                try {
-                    Intent intent = builder.build(MapActivity.this);
-                    startActivityForResult(intent, PLACE_PICKER_REQUEST);
-                    mGoogleMaps.clear();
-                } catch (GooglePlayServicesRepairableException e) {
-                    Log.e("Places", "GooglePlayServicesRepairableException: " + e.getMessage() );
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    Log.e("Places", "GooglePlayServicesNotAvailableException: " + e.getMessage() );
+                    try {
+                        if (mGoogleMarker.isInfoWindowShown()) {
+                            mGoogleMarker.hideInfoWindow();
+                        } else {
+                            Log.d("Maps", mGooglePlace.toString());
+                            mGoogleMarker.showInfoWindow();
+                        }
+                    } catch (NullPointerException e) {
+                        Log.d("Maps", "Infomratino was null.");
+                    }
                 }
-            }
-        });
+            });
 
-        hideKeyboard();
+            mGooglePlacesIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    // Google Places API (Directly from there) Pick Places
+
+                    PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                    try {
+                        startActivityForResult(builder.build(MapActivity.this), PLACE_PICKER_REQUEST);
+                        mGoogleMaps.clear();
+                    } catch (GooglePlayServicesRepairableException e) {
+                        Log.e("Places", "GooglePlayServicesRepairableException: " + e.getMessage());
+                    } catch (GooglePlayServicesNotAvailableException e) {
+                        Log.e("Places", "GooglePlayServicesNotAvailableException: " + e.getMessage());
+                    }
+                }
+            });
+
+            placesButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    // Google Places API (Directly from there) Pick Places
+                    PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                    try {
+                        Intent intent = builder.build(MapActivity.this);
+                        startActivityForResult(intent, PLACE_PICKER_REQUEST);
+                        mGoogleMaps.clear();
+                    } catch (GooglePlayServicesRepairableException e) {
+                        Log.e("Places", "GooglePlayServicesRepairableException: " + e.getMessage());
+                    } catch (GooglePlayServicesNotAvailableException e) {
+                        Log.e("Places", "GooglePlayServicesNotAvailableException: " + e.getMessage());
+                    }
+                }
+            });
+
+            hideKeyboard();
+        }
     }
 
     // Google Places API (Directly from there) Pick Places
