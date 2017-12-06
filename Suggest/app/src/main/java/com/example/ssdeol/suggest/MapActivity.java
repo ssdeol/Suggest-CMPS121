@@ -101,6 +101,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     String address = "";
     int NEARBY_RADIUS = 10000;
     Location currentLocation;
+    LatLng listLatLng;
 
     // We need 2 coordinates as Bounds that basically encompasses the entire world.
     private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(
@@ -257,6 +258,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 hideKeyboard();
             }
         } else {
+
             Location placeLocation = new Location(LocationManager.GPS_PROVIDER);
             placeLocation.setLatitude(MyListActivity.locations.get(intent.getIntExtra("placeNumber", 0)).latitude);
             placeLocation.setLongitude(MyListActivity.locations.get(intent.getIntExtra("placeNumber", 0)).longitude);
@@ -268,34 +270,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onMapLongClick(LatLng latLng) {
 
-
-        Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
-
         latLngList = latLng;
-
-        try {
-
-            List<Address> listAddresses = geocoder.getFromLocation(latLngList.latitude, latLngList.longitude, 1);
-
-            if (listAddresses != null && listAddresses.size() > 0) {
-
-                if (listAddresses.get(0).getThoroughfare() != null) {
-
-                    if (listAddresses.get(0).getSubThoroughfare() != null) {
-
-                        address += listAddresses.get(0).getSubThoroughfare() + " ";
-
-                    }
-
-                    address += listAddresses.get(0).getThoroughfare();
-
-                }
-
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         alertDialog.setTitle("Name: ");
@@ -313,18 +288,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         placeName = input.getText().toString();
-                        if (address.equals("")) {
 
-//            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm yyyy-MM-dd");
-//
-                            address = placeName;
-//
-                        }
-
-                        mGoogleMaps.addMarker(new MarkerOptions().position(latLngList).title(address));
-
-                        MyListActivity.places.add(address);
+                        MyListActivity.places.add(placeName);
                         MyListActivity.locations.add(latLngList);
+                        MyListActivity.arrayAdapter.notifyDataSetChanged();
+
+                        Toast.makeText(MapActivity.this, "Location Saved", Toast.LENGTH_SHORT).show();
                     }
                 }
         );
@@ -338,9 +307,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         );
 
         alertDialog.show();
-
-    //    MyListActivity.arrayAdapter.notifyDataSetChanged();
-
         Toast.makeText(this, "Location Saved", Toast.LENGTH_SHORT).show();
     }
 
@@ -651,6 +617,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 break;
             case R.id.B_to:
                 mGoogleMaps.clear();
+                getDeviceLocation();
                 Toast.makeText(MapActivity.this, "Map Cleared", Toast.LENGTH_SHORT).show();
                 break;
         }

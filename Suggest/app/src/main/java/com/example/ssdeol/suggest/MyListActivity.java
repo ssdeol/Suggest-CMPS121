@@ -17,10 +17,9 @@ import java.util.ArrayList;
 
 public class MyListActivity extends AppCompatActivity {
 
-    static ArrayList<String> places = new ArrayList<>();
-    static ArrayList<LatLng> locations = new ArrayList<>();
+    static ArrayList<String> places = new ArrayList<String>() {{add("Add a new place to the list...");}};
+    static ArrayList<LatLng> locations = new ArrayList<LatLng>() {{add(new LatLng(0, 0));}};
     static ArrayAdapter arrayAdapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +27,6 @@ public class MyListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_list);
 
         ListView listView = (ListView) findViewById(R.id.myListView);
-
-        places.add("Add a new place to the list...");
-        locations.add(new LatLng(0, 0));
 
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, places);
 
@@ -46,9 +42,6 @@ public class MyListActivity extends AppCompatActivity {
 
                 startActivity(intent);
             }
-
         });
-
-        // Just create a update functino // leave places.add in there and put everything else here
     }
 }
