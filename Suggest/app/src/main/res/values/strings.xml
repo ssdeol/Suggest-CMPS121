@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Suggest</string>
+    <string name="title_activity_nearbyplaces">Map</string>
 </resources>
