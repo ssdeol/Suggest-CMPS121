@@ -1,5 +1,6 @@
 package com.example.ssdeol.suggest;
 
+import java.util.HashMap;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -7,8 +8,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+
 
 /**
  * Created by ssdeol on 12/5/17.
@@ -55,7 +56,7 @@ public class DataParser {
         return googlePlaceMap;
 
     }
-    private List<HashMap<String, String>> getPlaces(JSONArray jsonArray)
+    private List<HashMap<String, String>>getPlaces(JSONArray jsonArray)
     {
         int count = jsonArray.length();
         List<HashMap<String, String>> placelist = new ArrayList<>();

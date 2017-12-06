@@ -7,28 +7,28 @@
     tools:context="com.example.ssdeol.suggest.MapActivity">
 
     <RelativeLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/mapsFragment"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="550dp"
-            android:id="@+id/mapsFragment"
-            tools:context=".MainActivity"
-            android:name="com.google.android.gms.maps.SupportMapFragment" />
+            android:layout_alignParentStart="true"
+            tools:context=".MapActivity" />
 
         <RelativeLayout
             android:id="@+id/mapRelativeLayout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:elevation="10dp"
-            android:background="@drawable/white_border">
+            android:layout_marginTop="10dp"
+            android:background="@drawable/white_border"
+            android:elevation="10dp">
 
             <ImageView
                 android:id="@+id/searchIcon"
@@ -42,13 +42,13 @@
                 android:id="@+id/searchInput"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toRightOf="@id/searchIcon"
                 android:layout_centerVertical="true"
-                android:textSize="15dp"
-                android:textColor="#000"
+                android:layout_toRightOf="@id/searchIcon"
                 android:background="@null"
                 android:hint="Enter a place to search"
-                android:imeOptions="actionSearch"/>
+                android:imeOptions="actionSearch"
+                android:textColor="#000"
+                android:textSize="15dp" />
 
         </RelativeLayout>
 
@@ -56,8 +56,8 @@
             android:id="@+id/myLocationGPSIcon"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_below="@id/mapRelativeLayout"
             android:layout_alignParentRight="true"
+            android:layout_below="@id/mapRelativeLayout"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
             android:scaleType="centerCrop"
@@ -67,8 +67,8 @@
             android:id="@+id/myPlacesIcon"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_below="@id/mapRelativeLayout"
             android:layout_alignParentLeft="true"
+            android:layout_below="@id/mapRelativeLayout"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:scaleType="centerCrop"
@@ -78,27 +78,61 @@
             android:id="@+id/myInfomrationIcon"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_below="@id/myPlacesIcon"
             android:layout_alignParentLeft="true"
+            android:layout_below="@id/myPlacesIcon"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_info" />
 
-        <Button
-            android:id="@+id/placesButton"
-            android:text="Places"
+        <RelativeLayout
             android:layout_below="@id/mapsFragment"
-            android:layout_alignParentRight="true"
-            android:padding="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_centerVertical="true"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
 
+            <Button
+                android:id="@+id/B_hopistals"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="10dp"
+                android:layout_below="@+id/TF_location"
+                android:onClick="onClick"
+                android:text="Hospitals" />
+
+            <Button
+                android:id="@+id/B_schools"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/TF_location"
+                android:layout_toEndOf="@+id/B_hopistals"
+                android:onClick="onClick"
+                android:text="Schools" />
+
+            <Button
+                android:id="@+id/B_restaurants"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/TF_location"
+                android:layout_toEndOf="@+id/B_schools"
+                android:onClick="onClick"
+                android:text="Restautants" />
+
+            <Button
+                android:id="@+id/B_to"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/B_restaurants"
+                android:layout_toEndOf="@+id/B_restaurants"
+                android:onClick="onClick"
+                android:text="To" />
+
+        </RelativeLayout>
 
 
     </RelativeLayout>
+
+
+
 
 </android.support.constraint.ConstraintLayout>

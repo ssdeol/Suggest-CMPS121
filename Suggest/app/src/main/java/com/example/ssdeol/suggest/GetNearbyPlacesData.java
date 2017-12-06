@@ -16,8 +16,7 @@ import java.util.List;
 /**
  * Created by ssdeol on 12/5/17.
  */
-
-public class GetNearbyPlacesList extends AsyncTask<Object, String, String> {
+class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
     private String googlePlacesData;
     private GoogleMap mMap;
@@ -28,7 +27,7 @@ public class GetNearbyPlacesList extends AsyncTask<Object, String, String> {
         mMap = (GoogleMap)objects[0];
         url = (String)objects[1];
 
-        DownloadDataUrl downloadURL = new DownloadDataUrl();
+        DownloadURL downloadURL = new DownloadURL();
         try {
             googlePlacesData = downloadURL.readUrl(url);
         } catch (IOException e) {
@@ -63,7 +62,7 @@ public class GetNearbyPlacesList extends AsyncTask<Object, String, String> {
             LatLng latLng = new LatLng( lat, lng);
             markerOptions.position(latLng);
             markerOptions.title(placeName + " : "+ vicinity);
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
             mMap.addMarker(markerOptions);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));

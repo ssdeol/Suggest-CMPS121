@@ -14,7 +14,10 @@ import java.net.URL;
  * Created by ssdeol on 12/5/17.
  */
 
-public class DownloadDataUrl {
+
+
+public class DownloadURL {
+
     public String readUrl(String myUrl) throws IOException
     {
         String data = "";

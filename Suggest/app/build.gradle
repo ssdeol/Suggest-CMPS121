@@ -34,6 +34,8 @@ dependencies {
     compile 'com.android.support:support-v4:26.+'
     compile 'com.google.android.gms:play-services:11.0.4'
     compile 'com.google.android.gms:play-services-location:x.y.z'
+    compile 'com.google.android.gms:play-services-maps:11.0.4'
+    compile 'com.google.android.gms:play-services-location:11.0.4'
 
     compile 'com.google.api-client:google-api-client-android:1.23.0'
     compile 'com.google.apis:google-api-services-vision:v1-rev364-1.23.0'

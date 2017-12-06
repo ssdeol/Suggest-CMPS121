@@ -34,7 +34,8 @@
         <activity android:name=".MyListActivity" />
         <activity android:name=".AboutUsActivity" />
         <activity android:name=".MapActivity" />
-        <activity android:name=".YouAreDoneActivity"></activity>
+        <activity android:name=".YouAreDoneActivity" />
+        <activity android:name=".MapsActivity"></activity>
     </application>
 
 </manifest>

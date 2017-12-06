@@ -100,6 +100,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     String placeName;
     String address = "";
     int NEARBY_RADIUS = 10000;
+    Location currentLocation;
 
     // We need 2 coordinates as Bounds that basically encompasses the entire world.
     private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(
@@ -123,10 +124,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mGoogleMyLocation = (ImageView) findViewById(R.id.myLocationGPSIcon);
         mGoogleInfo = (ImageView) findViewById(R.id.myInfomrationIcon);
         mGooglePlacesIcon = (ImageView) findViewById(R.id.myPlacesIcon);
-
-        placesButton = (Button) findViewById(R.id.placesButton);
-
-        String url = getUrl(latitude, longitude, place);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapsFragment);
@@ -214,16 +211,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-    private String getUrl(double latitude, double longitude, String nearbyPlace) {
+    private String getUrl(double latitude , double longitude , String nearbyPlace)
+    {
 
         StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-        googlePlaceUrl.append("location=" + latitude + "," + longitude);
-        googlePlaceUrl.append("&radius=" + NEARBY_RADIUS);
-        googlePlaceUrl.append("&type=stores");
-        googlePlaceUrl.append("&keyword=" + place);
-        googlePlaceUrl.append("&key=" + "AIzaSyAQ0tHxeLZE3pElkuH5xiTl12lrBhMoSlw");
+        googlePlaceUrl.append("location="+latitude+","+longitude);
+        googlePlaceUrl.append("&radius="+NEARBY_RADIUS);
+        googlePlaceUrl.append("&type="+nearbyPlace);
+        googlePlaceUrl.append("&sensor=true");
+        googlePlaceUrl.append("&key="+"AIzaSyBLEPBRfw7sMb73Mr88L91Jqh3tuE4mKsE");
 
-        Log.d("MapsActivity", "url = " + googlePlaceUrl.toString());
+        Log.d("MapsActivity", "url = "+googlePlaceUrl.toString());
 
         return googlePlaceUrl.toString();
     }
@@ -432,24 +430,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
             });
 
-            placesButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    // Google Places API (Directly from there) Pick Places
-                    PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-                    try {
-                        Intent intent = builder.build(MapActivity.this);
-                        startActivityForResult(intent, PLACE_PICKER_REQUEST);
-                        mGoogleMaps.clear();
-                    } catch (GooglePlayServicesRepairableException e) {
-                        Log.e("Places", "GooglePlayServicesRepairableException: " + e.getMessage());
-                    } catch (GooglePlayServicesNotAvailableException e) {
-                        Log.e("Places", "GooglePlayServicesNotAvailableException: " + e.getMessage());
-                    }
-                }
-            });
-
             hideKeyboard();
         }
     }
@@ -506,7 +486,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     public void onComplete(@NonNull com.google.android.gms.tasks.Task<Location> task) {
                         if(task.isSuccessful()){
                             Log.d("Maps", "Location Found");
-                            Location currentLocation = task.getResult();
+                            currentLocation = task.getResult();
 
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), defaultZoom, "My Location");
                         } else {
@@ -524,7 +504,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
     // Move the camera and set a custom title
-    private void moveCamera(LatLng latLng, float zoom, String title){
+    public void moveCamera(LatLng latLng, float zoom, String title){
         Log.d("Maps", "Moving the camera to current location with lat: " + latLng.latitude + " lng: " + latLng.longitude);
         mGoogleMaps.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 
@@ -538,7 +518,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     // Move the camera but this all the information from Google Places
-    private void moveCamera(LatLng latLng, float zoom, PlaceInfo placeInfo){
+    public void moveCamera(LatLng latLng, float zoom, PlaceInfo placeInfo){
         Log.d("Maps", "Moving the camera to current location with lat: " + latLng.latitude + " lng: " + latLng.longitude);
         mGoogleMaps.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 
@@ -626,5 +606,51 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     };
 
+    public void onClick(View view) {
+        Object dataTransfer[] = new Object[2];
+        GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
+
+        switch (view.getId()){
+            case R.id.B_hopistals:
+                mGoogleMaps.clear();
+                getDeviceLocation();
+                String hospital = "hospital";
+                String url = getUrl(currentLocation.getLatitude(), currentLocation.getLongitude(), hospital);
+                dataTransfer[0] = mGoogleMaps;
+                dataTransfer[1] = url;
+
+                getNearbyPlacesData.execute(dataTransfer);
+                Toast.makeText(MapActivity.this, "Showing Nearby Hospitals", Toast.LENGTH_SHORT).show();
+                break;
+
+
+            case R.id.B_schools:
+                mGoogleMaps.clear();
+                getDeviceLocation();
+                String school = "school";
+                url = getUrl(currentLocation.getLatitude(), currentLocation.getLongitude(), school);
+                dataTransfer[0] = mGoogleMaps;
+                dataTransfer[1] = url;
+
+                getNearbyPlacesData.execute(dataTransfer);
+                Toast.makeText(MapActivity.this, "Showing Nearby Schools", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.B_restaurants:
+                mGoogleMaps.clear();
+                getDeviceLocation();
+                String resturant = "restuarant";
+                url = getUrl(currentLocation.getLatitude(), currentLocation.getLongitude(), resturant);
+                dataTransfer[0] = mGoogleMaps;
+                dataTransfer[1] = url;
+
+                getNearbyPlacesData.execute(dataTransfer);
+                Toast.makeText(MapActivity.this, "Showing Nearby Restaurants", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.B_to:
+                mGoogleMaps.clear();
+                Toast.makeText(MapActivity.this, "Map Cleared", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
 }
 
