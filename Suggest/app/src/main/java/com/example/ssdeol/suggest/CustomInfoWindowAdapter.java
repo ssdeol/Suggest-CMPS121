@@ -15,43 +15,42 @@ import org.w3c.dom.Text;
  * Created by ssdeol on 11/19/17.
  */
 
-public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter{
+public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
-    private final View mGoogleWindow;
-    private Context mGoogleContext;
+    private final View mWindow;
+    private Context mContext;
 
-    public CustomInfoWindowAdapter(Context context){
-        mGoogleContext = context;
-        mGoogleWindow = LayoutInflater.from(context).inflate(R.layout.custom_info_window, null);
+    public CustomInfoWindowAdapter(Context context) {
+        mContext = context;
+        mWindow = LayoutInflater.from(context).inflate(R.layout.custom_info_window, null);
     }
 
-    private void renderWindowText(Marker marker, View view){
+    private void rendowWindowText(Marker marker, View view){
 
         String title = marker.getTitle();
-        TextView textViewTitle = (TextView) view.findViewById(R.id.infoSnippetTitle);
+        TextView tvTitle = (TextView) view.findViewById(R.id.infoSnippettitle);
 
         if(!title.equals("")){
-            textViewTitle.setText(title);
+            tvTitle.setText(title);
         }
 
         String snippet = marker.getSnippet();
-        TextView textViewSnippet = (TextView) view.findViewById(R.id.infoSnippet);
+        TextView tvSnippet = (TextView) view.findViewById(R.id.infoSnippet);
 
         if(!snippet.equals("")){
-            textViewSnippet.setText(snippet);
+            tvSnippet.setText(snippet);
         }
-
     }
 
     @Override
     public View getInfoWindow(Marker marker) {
-        renderWindowText(marker, mGoogleWindow);
-        return mGoogleWindow;
+        rendowWindowText(marker, mWindow);
+        return mWindow;
     }
 
     @Override
     public View getInfoContents(Marker marker) {
-        renderWindowText(marker, mGoogleWindow);
-        return mGoogleWindow;
+        rendowWindowText(marker, mWindow);
+        return mWindow;
     }
 }

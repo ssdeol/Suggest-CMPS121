@@ -268,6 +268,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onMapLongClick(LatLng latLng) {
 
+
         Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
 
         latLngList = latLng;
@@ -403,7 +404,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         if (mGoogleMarker.isInfoWindowShown()) {
                             mGoogleMarker.hideInfoWindow();
                         } else {
-                            Log.d("Maps", mGooglePlace.toString());
+                            Log.d("Maps", "Place Info: " + mGooglePlace.toString());
                             mGoogleMarker.showInfoWindow();
                         }
                     } catch (NullPointerException e) {
@@ -527,18 +528,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mGoogleMaps.setInfoWindowAdapter(new CustomInfoWindowAdapter(MapActivity.this));
 
         if(placeInfo != null){
-            try {
-                String placeInfomrationSnippet = "Address" + mGooglePlace.getAddress() + "\n" +
-                        "Phone Number" + mGooglePlace.getPhoneNumber() + "\n" +
-                        "Website" + mGooglePlace.getWebsiteUri() + "\n" +
-                        "Rating" + mGooglePlace.getRating() + "\n";
+            try{
+                String snippet = "Address: " + placeInfo.getAddress() + "\n" +
+                        "Phone Number: " + placeInfo.getPhoneNumber() + "\n" +
+                        "Website: " + placeInfo.getWebsiteUri() + "\n" +
+                        "Price Rating: " + placeInfo.getRating() + "\n";
 
                 MarkerOptions options = new MarkerOptions()
                         .position(latLng)
-                        .title(mGooglePlace.getName())
-                        .snippet(placeInfomrationSnippet);
+                        .title(placeInfo.getName())
+                        .snippet(snippet);
 
                 mGoogleMarker = mGoogleMaps.addMarker(options);
+
             } catch (NullPointerException e){
                 Log.e("Places", "Moving Camera, some of the information was null.");
             }
@@ -589,19 +591,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 mGooglePlace = new PlaceInfo();
                 mGooglePlace.setName(place.getName().toString());
                 mGooglePlace.setAddress(place.getAddress().toString());
-                //               mGooglePlace.setAttributions(place.getAttributions().toString());
-                mGooglePlace.setPhoneNumber(place.getPhoneNumber().toString());
-                mGooglePlace.setLatLng(place.getLatLng());
+//                mPlace.setAttributions(place.getAttributions().toString());
+//                Log.d(TAG, "onResult: attributions: " + place.getAttributions());
                 mGooglePlace.setId(place.getId());
+                mGooglePlace.setLatlng(place.getLatLng());
                 mGooglePlace.setRating(place.getRating());
+                mGooglePlace.setPhoneNumber(place.getPhoneNumber().toString());
                 mGooglePlace.setWebsiteUri(place.getWebsiteUri());
 
-                Log.d("Places", "Place Information: " + mGooglePlace);
-            } catch (NullPointerException e){
-                Log.e("Places", "Some of the information about a place was null: " + e.getMessage());
+            }catch (NullPointerException e){
+                Log.e(TAG, "onResult: NullPointerException: " + e.getMessage() );
             }
 
-            moveCamera(new LatLng(place.getViewport().getCenter().latitude, place.getViewport().getCenter().longitude), defaultZoom, mGooglePlace);
+            moveCamera(new LatLng(place.getViewport().getCenter().latitude,
+                    place.getViewport().getCenter().longitude), defaultZoom, mGooglePlace);
             places.release();
         }
     };

@@ -18,30 +18,24 @@ public class PlaceInfo {
     private String address;
     private String phoneNumber;
     private String id;
-    private String attributions;
-    private float rating;
-    private LatLng latLng;
     private Uri websiteUri;
+    private LatLng latlng;
+    private float rating;
+    private String attributions;
 
-    public PlaceInfo(String name,
-                     String address,
-                     String phoneNumber,
-                     String id,
-                     String attributions,
-                     float rating,
-                     LatLng latLng,
-                     Uri websiteUri) {
+    public PlaceInfo(String name, String address, String phoneNumber, String id, Uri websiteUri,
+                     LatLng latlng, float rating, String attributions) {
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.id = id;
-        this.attributions = attributions;
-        this.rating = rating;
-        this.latLng = latLng;
         this.websiteUri = websiteUri;
+        this.latlng = latlng;
+        this.rating = rating;
+        this.attributions = attributions;
     }
 
-    public PlaceInfo(){
+    public PlaceInfo() {
 
     }
 
@@ -77,12 +71,20 @@ public class PlaceInfo {
         this.id = id;
     }
 
-    public String getAttributions() {
-        return attributions;
+    public Uri getWebsiteUri() {
+        return websiteUri;
     }
 
-    public void setAttributions(String attributions) {
-        this.attributions = attributions;
+    public void setWebsiteUri(Uri websiteUri) {
+        this.websiteUri = websiteUri;
+    }
+
+    public LatLng getLatlng() {
+        return latlng;
+    }
+
+    public void setLatlng(LatLng latlng) {
+        this.latlng = latlng;
     }
 
     public float getRating() {
@@ -93,20 +95,12 @@ public class PlaceInfo {
         this.rating = rating;
     }
 
-    public LatLng getLatLng() {
-        return latLng;
+    public String getAttributions() {
+        return attributions;
     }
 
-    public void setLatLng(LatLng latLng) {
-        this.latLng = latLng;
-    }
-
-    public Uri getWebsiteUri() {
-        return websiteUri;
-    }
-
-    public void setWebsiteUri(Uri websiteUri) {
-        this.websiteUri = websiteUri;
+    public void setAttributions(String attributions) {
+        this.attributions = attributions;
     }
 
     @Override
@@ -116,10 +110,10 @@ public class PlaceInfo {
                 ", address='" + address + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", id='" + id + '\'' +
-                ", attributions='" + attributions + '\'' +
-                ", rating=" + rating +
-                ", latLng=" + latLng +
                 ", websiteUri=" + websiteUri +
+                ", latlng=" + latlng +
+                ", rating=" + rating +
+                ", attributions='" + attributions + '\'' +
                 '}';
     }
 }
