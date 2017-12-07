@@ -1,3 +1,4 @@
+
 package com.example.ssdeol.suggest;
 
 import android.content.Intent;

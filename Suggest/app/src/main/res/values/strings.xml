@@ -3,4 +3,11 @@
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="photo">Take Picture</string>
+    <string name="ic_hospital">Hospital</string>
+    <string name="ic_restaurant">Restaurants</string>
+    <string name="ic_schools">Schools</string>
+    <string name="ic_remove">Clear</string>
+
+
 </resources>

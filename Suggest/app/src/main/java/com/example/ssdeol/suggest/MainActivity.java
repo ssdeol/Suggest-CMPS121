@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void aboutUsButtonPressed(View view) {
-        Intent intent = new Intent(MainActivity.this, AboutUsActivity.class);
+        Intent intent = new Intent(MainActivity.this, PhotoView.class);
         startActivity(intent);
     }
 
