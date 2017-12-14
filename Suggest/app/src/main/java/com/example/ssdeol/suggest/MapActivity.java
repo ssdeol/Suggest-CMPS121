@@ -12,6 +12,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -75,7 +76,8 @@ import java.util.Locale;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.util.Log.i;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMapLongClickListener {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener,
+        GoogleMap.OnMapLongClickListener, View.OnClickListener {
 
     GoogleMap mGoogleMaps;
     FusedLocationProviderClient mFusedLocationProviderClient;
@@ -114,7 +116,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private ImageView mGoogleMyLocation;
     private ImageView mGoogleInfo;
     private ImageView mGooglePlacesIcon;
-    private Button placesButton;
+    //buttons for nearbyPlaces
+    FloatingActionButton host;
+    FloatingActionButton rest;
+    FloatingActionButton clear;
+    FloatingActionButton school;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +131,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mGoogleMyLocation = (ImageView) findViewById(R.id.myLocationGPSIcon);
         mGoogleInfo = (ImageView) findViewById(R.id.myInfomrationIcon);
         mGooglePlacesIcon = (ImageView) findViewById(R.id.myPlacesIcon);
+
+
+
+        host= (FloatingActionButton) findViewById(R.id.B_hospitals);
+        host.setOnClickListener(this);
+        rest= (FloatingActionButton) findViewById(R.id.B_hospitals);
+        rest.setOnClickListener(this);
+        school= (FloatingActionButton) findViewById(R.id.B_hospitals);
+        school.setOnClickListener(this);
+        clear= (FloatingActionButton) findViewById(R.id.B_hospitals);
+        clear.setOnClickListener(this);
+
+
+
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapsFragment);
@@ -580,7 +600,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
 
         switch (view.getId()){
-            case R.id.B_hopistals:
+            case R.id.B_hospitals:
                 mGoogleMaps.clear();
                 getDeviceLocation();
                 String hospital = "hospital";
