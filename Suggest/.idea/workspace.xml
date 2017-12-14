@@ -51,8 +51,8 @@
       <file leaf-file-name="MapActivity.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/ssdeol/suggest/MapActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="505">
-              <caret line="619" column="100" lean-forward="true" selection-start-line="619" selection-start-column="100" selection-end-line="619" selection-end-column="100" />
+            <state relative-caret-position="567">
+              <caret line="138" column="68" lean-forward="false" selection-start-line="138" selection-start-column="68" selection-end-line="138" selection-end-column="68" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -2368,7 +2368,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1513248022508" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1513248312059" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -2416,7 +2416,7 @@
       </Profilers>
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1513248022509" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1513248312060" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -2599,7 +2599,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1513248022513" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1513248312061" />
       </method>
     </configuration>
     <list size="2">
@@ -2961,8 +2961,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/ssdeol/suggest/MapActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="505">
-          <caret line="619" column="100" lean-forward="true" selection-start-line="619" selection-start-column="100" selection-end-line="619" selection-end-column="100" />
+        <state relative-caret-position="567">
+          <caret line="138" column="68" lean-forward="false" selection-start-line="138" selection-start-column="68" selection-end-line="138" selection-end-column="68" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

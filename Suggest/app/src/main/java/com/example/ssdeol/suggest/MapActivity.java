@@ -136,11 +136,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         host= (FloatingActionButton) findViewById(R.id.B_hospitals);
         host.setOnClickListener(this);
-        rest= (FloatingActionButton) findViewById(R.id.B_hospitals);
+        rest= (FloatingActionButton) findViewById(R.id.B_restaurants);
         rest.setOnClickListener(this);
-        school= (FloatingActionButton) findViewById(R.id.B_hospitals);
+        school= (FloatingActionButton) findViewById(R.id.B_schools);
         school.setOnClickListener(this);
-        clear= (FloatingActionButton) findViewById(R.id.B_hospitals);
+        clear= (FloatingActionButton) findViewById(R.id.B_to);
         clear.setOnClickListener(this);
 
 
