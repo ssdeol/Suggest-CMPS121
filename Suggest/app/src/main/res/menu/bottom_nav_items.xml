@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/materialClear"
+        android:enabled="true"
+
+        app:showAsAction="ifRoom"
+        android:title="@string/ic_remove" />
+
+    <item
+        android:id="@+id/materialSchool"
+        android:enabled="true"
+
+        app:showAsAction="ifRoom"
+        android:title="@string/ic_schools" />
+    <item
+        android:id="@+id/materialRestaurants"
+        android:enabled="true"
+
+        app:showAsAction="ifRoom"
+        android:title="@string/ic_restaurant" />
+
+    <item
+        android:id="@+id/materialHospital"
+        android:enabled="true"
+
+        app:showAsAction="ifRoom"
+        android:title="@string/ic_hospital" />
+
+
+
+</menu>
