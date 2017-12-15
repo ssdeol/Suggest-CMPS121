@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -42,7 +43,7 @@ import android.Manifest;
     {
         //variables to use for the camera
         private ImageView imageView;
-        Button captureButton;
+        FloatingActionButton captureButton;
 
         final int CAMERA_CAPTURE = 1;
         final int CROP_PIC = 2;
@@ -69,7 +70,7 @@ import android.Manifest;
             //get images
             receiptImages = RetriveCapturedImagePath();
             //initialiaze the button to take a photo and set on its listner
-            captureButton= (Button) findViewById(R.id.Photo_B);
+            captureButton=  findViewById(R.id.Photo_B);
             captureButton.setOnClickListener(this);
 
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
